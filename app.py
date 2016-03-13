@@ -10,7 +10,7 @@ from keys import *
 app = Flask(__name__)
 
 
-fsq_client = foursquare.Foursquare(client_id=FOURSQUARE_CLIENT_ID, client_secret=FOURSQUARE_CLIENT_SECRET, redirect_uri='http://localhost:5000/foursquare')
+fsq_client = foursquare.Foursquare(client_id=FOURSQUARE_CLIENT_ID, client_secret=FOURSQUARE_CLIENT_SECRET, redirect_uri='http://localhost:5000/fsq_login')
 fsq_auth_uri = fsq_client.oauth.auth_url()
 
 gh_client = GitHub(client_id=GITHUB_CLIENT_ID, client_secret=GITHUB_CLIENT_SECRET)
@@ -38,8 +38,8 @@ def index():
 """
 Login callbacks
 """
-@app.route('/github_login')
-def github_login_callback():
+@app.route('/gh_login')
+def gh_login_callback():
     code = request.args.get('code')
     gh_access_token = gh_client.get_access_token(code)
 
@@ -48,8 +48,8 @@ def github_login_callback():
     
     return resp
 
-@app.route('/foursquare')
-def foursquare_login_callback():
+@app.route('/fsq_login')
+def fsq_login_callback():
     code = request.args.get('code')
     fsq_access_token = fsq_client.oauth.get_token(code)
 
@@ -77,8 +77,8 @@ def get_gh_data():
 
     return json.dumps(events)
 
-@app.route('/foursquare_data')
-def get_foursquare_data():
+@app.route('/fsq_data')
+def get_fsq_data():
     fsq_access_token = request.cookies.get('fsq_access_token')
     fsq_client.set_access_token(fsq_access_token)
 
