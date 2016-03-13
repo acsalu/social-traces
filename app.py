@@ -2,7 +2,6 @@ import os
 
 import flask
 
-# app = Flask(__name__, static_url_path='/static', static_folder='static/')
 app = flask.Flask(__name__)
 
 @app.route('/')
