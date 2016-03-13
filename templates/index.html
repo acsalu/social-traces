@@ -19,6 +19,7 @@
 </head>
 <body>
 
+	<!-- Social Login Buttons -->
 	<div id='social-login' class="container">
 		<div class="row">
 			<div class="col-lg-3">
@@ -53,19 +54,18 @@
 				  </a>
 				{% endif %}
 			</div>
-		</div>
-	</div>
+		</div> <!-- .row -->
+	</div> <!-- #social-login -->
 
 
 	<div class="container">
-		
-		{% if fsq_auth_uri %}
-		
+		{% if should_show_traces %}
+		<svg id="traces"></svg>
+		<script type="text/javascript">
+			requestFoursquareData();
+		</script>
 		{% else %}
-			<svg id="foursquare"></svg>
-			<script type="text/javascript">
-				requestFoursquareData();
-			</script>
+			<h4>Please Log In</h4>
 		{% endif %}
 	</div>
 	

@@ -31,9 +31,9 @@ def index():
     services_logged_in['github'] = gh_access_token != None
     services_logged_in['foursquare'] = fsq_access_token != None
 
-    print gh_access_token
+    should_show_traces = reduce(lambda a, b: a or b, services_logged_in.values(), False)
 
-    return render_template('index.html', auth_uris=auth_uris, services_logged_in=services_logged_in)
+    return render_template('index.html', auth_uris=auth_uris, services_logged_in=services_logged_in, should_show_traces=should_show_traces)
 
 """
 Login callbacks

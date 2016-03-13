@@ -29,7 +29,7 @@ function visualize(timestamps) {
     .scale(x)
     .orient("bottom");
 
-  var svg = d3.select('#foursquare')
+  var svg = d3.select('#traces')
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append('g')
