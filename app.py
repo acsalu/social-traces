@@ -8,7 +8,7 @@ app = Flask(__name__)
 FOURSQUARE_CLIENT_ID = os.environ.get('FOURSQUARE_CLIENT_ID')
 FOURSQUARE_CLIENT_SECRET = os.environ.get('FOURSQUARE_CLIENT_SECRET')
 
-fsq_client = foursquare.Foursquare(client_id=FOURSQUARE_CLIENT_ID, client_secret=FOURSQUARE_CLIENT_SECRET, redirect_uri='http://social-traces.herokuapp.com/foursquare')
+fsq_client = foursquare.Foursquare(client_id=FOURSQUARE_CLIENT_ID, client_secret=FOURSQUARE_CLIENT_SECRET, redirect_uri='https://social-traces.herokuapp.com/foursquare')
 fsq_auth_uri = fsq_client.oauth.auth_url()
 
 @app.route('/')
