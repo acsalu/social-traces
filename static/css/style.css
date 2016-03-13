@@ -1,0 +1,27 @@
+body {
+  font: 10px sans-serif;
+
+}
+
+#social-login {
+    margin-top: 20px;
+}
+
+#social-login>.row>div {
+    margin: 20px 0;
+    padding-right: 40px;
+}
+
+.bar rect {
+  fill: #F94877;
+}
+
+.bar text {
+  fill: white;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
