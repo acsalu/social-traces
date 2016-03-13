@@ -3,10 +3,25 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+	<script src="{{ url_for('static', filename='js/script.js')}}"></script>
 </head>
 <body>
-	<a href="https://foursquare.com/oauth2/authenticate?client_id=YHK5GESNFMSKGHKNAHX0FLG5OLAAK0FFHPKKQ2FSS5BPCFV0&response_type=token&redirect_uri=https://social-traces.herokuapp.com">
+	{% if fsq_auth_uri %}
+	<a href={{ fsq_auth_uri }}>
 		<img src="{{ url_for('static', filename='img/Connect-to-Foursquare-150.png')}}" alt="">	
 	</a>
+	{% else %}
+		<h3>Foursquare!</h3>
+		<div id="foursquare"></div>
+		<script type="text/javascript">requestFoursquareData();</script>
+	{% endif %}
+
+	{% if fb_auth_uri %}
+	<p>yes</p>
+	{% else %}
+	<p>{{ fsq_access_token }}</p>
+	{% endif %}
+
 </body>
 </html>
