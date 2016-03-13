@@ -2,26 +2,73 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>Social Traces</title>
+
+	<!-- Stylesheets -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='bower_components/bootstrap-social/bootstrap-social.css')}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+
+	
+	<!-- Scripts -->
 	<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
 	<script src="{{ url_for('static', filename='js/script.js')}}"></script>
 </head>
 <body>
-	{% if fsq_auth_uri %}
-	<a href={{ fsq_auth_uri }}>
-		<img src="{{ url_for('static', filename='img/Connect-to-Foursquare-150.png')}}" alt="">	
-	</a>
-	{% else %}
-		<h3>Foursquare!</h3>
-		<div id="foursquare"></div>
-		<script type="text/javascript">requestFoursquareData();</script>
-	{% endif %}
 
-	{% if fb_auth_uri %}
-	<p>yes</p>
-	{% else %}
-	<p>{{ fsq_access_token }}</p>
-	{% endif %}
+	<div id='social-login' class="container">
+		<div class="row">
+			<div class="col-lg-3">
+				<a class="btn btn-block btn-social btn-facebook">
+			    <span class="fa fa-facebook"></span> Sign in with Facebook
+			  </a>
+			</div>
+			<div class="col-lg-3">
+				<a class="btn btn-block btn-social btn-twitter">
+			    <span class="fa fa-twitter"></span> Sign in with Twitter
+			  </a>
+			</div>
+			<div class="col-lg-3">
+				{% if not services_logged_in['github'] %}
+				<a href="{{ auth_uris['github'] }}" class="btn btn-block btn-social btn-github">
+			    <span class="fa fa-github"></span> Sign in with Github
+			  </a>
+			  {% else %}
+			  <a class="btn btn-block btn-social btn-github">
+			    <span class="fa fa-github"></span> Github Connected <span class="fa fa-check"></span>
+			  </a>
+			  {% endif %}
+			</div>
+			<div class="col-lg-3">
+				{% if not services_logged_in['foursquare'] %}
+					<a href="{{ auth_uris['foursquare'] }}" class="btn btn-block btn-social btn-foursquare">
+					    <span class="fa fa-foursquare"></span> Sign in with Foursquare
+				  </a>
+				{% else %}
+					<a class="btn btn-block btn-social btn-foursquare">
+					    <span class="fa fa-foursquare"></span> Foursquare Connected <span class="fa fa-check"></span>
+				  </a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container">
+		
+		{% if fsq_auth_uri %}
+		
+		{% else %}
+			<svg id="foursquare"></svg>
+			<script type="text/javascript">
+				requestFoursquareData();
+			</script>
+		{% endif %}
+	</div>
+	
 
 </body>
 </html>

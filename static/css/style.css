@@ -7,6 +7,11 @@ body {
     margin-top: 20px;
 }
 
+#social-login>.row>div {
+    margin: 20px 0;
+    padding-right: 40px;
+}
+
 .bar rect {
   fill: #F94877;
 }

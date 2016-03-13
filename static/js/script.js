@@ -60,7 +60,7 @@ function visualize(timestamps) {
 }
 
 function requestFoursquareData() {
-  $.getJSON('/foursquare_data', function( data ) {
+  $.getJSON('/gh_data', function( data ) {
     visualize(data);
   });
 }
