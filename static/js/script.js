@@ -1,71 +1,93 @@
+function requestTimestamps() {
+
+  $.getJSON('/fsq_data', function(data) {
+    activities[Service.FOURSQUARE] = data.map(timestampsToMinuteInDay);
+    visualize();
+  });
+
+  $.getJSON('/gh_data', function(data) {
+    activities[Service.GITHUB] = data.map(timestampsToMinuteInDay);
+    visualize();
+  });
+}
+
 var Service = Object.freeze({FACEBOOK: 0, TWITTER: 1, GITHUB: 2, FOURSQUARE: 3});
+var className = {};
+className[Service.FACEBOOK] = 'fb';
+className[Service.TWITTER] = 'tw';
+className[Service.GITHUB] = 'gh';
+className[Service.FOURSQUARE] = 'fsq';
 
-function visualize(timestamps, service) {
+var activities = {}
 
-  var margin = {top: 10, right: 30, bottom: 30, left: 30},
+var hourFormat = d3.time.format("%H");
+var minuteFormat = d3.time.format("%M");
+
+function timestampsToMinuteInDay(t) {
+  return parseInt(hourFormat(new Date(t))) * 60 + parseInt(minuteFormat(new Date(t)));
+}
+
+function visualize() {
+
+  var margin = {top: 10, right: 0, bottom: 30, left: 0},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-  var hourFormat = d3.time.format("%H");
-  var minuteFormat = d3.time.format("%M");
-
-  var transformer = function(t) {
-      return parseInt(hourFormat(new Date(t))) * 60 + parseInt(minuteFormat(new Date(t)));
-  }
-
-  var minuteInDay = timestamps.map(transformer);
+  var svg = d3.select('#traces')
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+    .append('g')
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var x = d3.scale.linear()
     .domain([0, 24 * 60])
     .range([0, width]);
 
-  var data = d3.layout.histogram()
-    .bins(x.ticks(24))
-    (minuteInDay);
-
-  var y = d3.scale.linear()
-    .domain([0, d3.max(data, function(d) { return d.y; })])
-    .range([height, 0]);
-
   var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
 
-  var svg = d3.select('#traces')
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append('g')
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  
+  var bins = {}
 
-  var barClass = "bar";
-  switch (service) {
-    case Service.FACEBOOK:
-      barClass += " fb";
-      break;
-    case Service.TWITTER:
-      barClass += " tw";
-      break;
-    case Service.GITHUB:
-      barClass += " gh";
-      break;
-    case Service.FOURSQUARE:
-      barClass += " fsq";
-      break;
-    default:
-      break;
+  for (service in activities) {
+    var minuteInDay = activities[service];
+
+    var data = d3.layout.histogram()
+      .bins(x.ticks(24))
+      (minuteInDay);
+
+    bins[service] = data;
   }
 
-  var bar = svg.selectAll('.bar')
-      .data(data)
-    .enter().append('g')
-      .attr('class', barClass)
-      .attr('transform', function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+  var allBins = []
+  for (service in activities) {
+    allBins = allBins.concat(bins[service]);
+  }
 
-  
-  bar.append("rect")
-    .attr("x", x(data[0].dx) / 4 * service)
-    .attr("width", x(data[0].dx) / 4)
-    .attr("height", function(d) { return height - y(d.y); });
+  var y = d3.scale.linear()
+    .domain([0, d3.max(allBins, function(d) { return d.y; })])
+    .range([height, 0]);
+
+  for (service in activities) {
+
+    if (service in bins) {
+      var data = bins[service];
+      console.log(data);
+
+      var bar = svg.selectAll('.' + className[service])
+          .data(data)
+        .enter().append('g')
+          .attr('class', 'bar ' + className[service])
+          .attr('transform', function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+      
+      bar.append("rect")
+        .attr("x", x(data[0].dx) / 4 * service)
+        .attr("width", x(data[0].dx) / 4)
+        .attr("height", function(d) { return height - y(d.y); });
+    }
+  }
 
   // bar.append("text")
   //   .attr("dy", ".75em")
@@ -78,14 +100,4 @@ function visualize(timestamps, service) {
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
-}
-
-function requestTimestamps() {
-  $.getJSON('/fsq_data', function(data) {
-    visualize(data, Service.FOURSQUARE);
-  });
-
-  $.getJSON('/gh_data', function(data) {
-    visualize(data, Service.GITHUB);
-  });
 }
