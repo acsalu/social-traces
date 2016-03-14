@@ -12,10 +12,6 @@ body {
     padding-right: 40px;
 }
 
-.bar rect {
-  fill: #F94877;
-}
-
 .bar text {
   fill: white;
 }
@@ -24,4 +20,20 @@ body {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
+}
+
+.gh rect {
+    fill: black;
+}
+
+.fb rect {
+    fill: #3b5998;
+}
+
+.tw rect {
+    fill: #55acee;
+}
+
+.fsq rect {
+  fill: #F94877;
 }
