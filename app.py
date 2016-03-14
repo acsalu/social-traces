@@ -67,15 +67,15 @@ def get_gh_data():
     gh = GitHub(access_token=gh_access_token)
 
     user_id = gh.user().get()['login']
-    events = gh.users('acsalu').received_events().get()
+    events = gh.users(user_id).events().get()
 
-    timestamps = [e['created_at'][:-1] for e in events]
+    createdAts = [e['created_at'][:-1] for e in events]
 
-    events = []
-    for t in timestamps:
-        events.append(time.mktime(time.strptime(t, "%Y-%m-%dT%H:%M:%S")))
-
-    return json.dumps(events)
+    timestamps = []
+    for ca in createdAts:
+        ts = time.strptime(ca, "%Y-%m-%dT%H:%M:%S")
+        timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+    return json.dumps(timestamps)
 
 @app.route('/fsq_data')
 def get_fsq_data():
@@ -83,9 +83,17 @@ def get_fsq_data():
     fsq_client.set_access_token(fsq_access_token)
 
     checkins = fsq_client.users.checkins(params={'limit': 300})
-    checkins = [c['createdAt'] for c in checkins['checkins']['items']]
+    createdAts = [c['createdAt'] for c in checkins['checkins']['items']]
+    print createdAts
+    print "nowWithOffset"
+    createdAts = [c['createdAt'] + c['timeZoneOffset'] * 60 for c in checkins['checkins']['items']]
+    print createdAts
+    timestamps = []
+    for ca in createdAts:
+        ts = time.gmtime(ca)
+        timestamps.append(ts.tm_hour * 60 + ts.tm_min)
 
-    return json.dumps(checkins)
+    return json.dumps(timestamps)
 
 if __name__ == '__main__':
     app.debug = True

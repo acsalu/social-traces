@@ -1,12 +1,12 @@
 function requestTimestamps() {
 
   $.getJSON('/fsq_data', function(data) {
-    activities[Service.FOURSQUARE] = data.map(timestampsToMinuteInDay);
+    activities[Service.FOURSQUARE] = data;
     visualize();
   });
 
   $.getJSON('/gh_data', function(data) {
-    activities[Service.GITHUB] = data.map(timestampsToMinuteInDay);
+    activities[Service.GITHUB] = data;
     visualize();
   });
 }
