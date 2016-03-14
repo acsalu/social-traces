@@ -9,7 +9,7 @@ body {
 
 #social-login>.row>div {
     margin: 20px 0;
-    padding-right: 40px;
+    padding: 0 35px;
 }
 
 .bar text {
@@ -36,4 +36,8 @@ body {
 
 .fsq rect {
   fill: #F94877;
+}
+
+.fa-check {
+  padding-top: 3px;
 }
