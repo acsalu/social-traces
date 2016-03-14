@@ -29,7 +29,7 @@ function timestampsToMinuteInDay(t) {
 
 function visualize() {
 
-  var margin = {top: 10, right: 0, bottom: 30, left: 0},
+  var margin = {top: 10, right: 20, bottom: 30, left: 20},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
