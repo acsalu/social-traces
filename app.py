@@ -103,7 +103,17 @@ def get_gh_data():
     gh = GitHub(access_token=gh_access_token)
 
     user_id = gh.user().get()['login']
-    events = gh.users(user_id).events().get()
+    page = 1
+    events = gh.users(user_id).events().get(page=page)
+
+    while True:
+        page += 1        
+        new_events = gh.users(user_id).events().get(page=page)
+        if len(new_events) > 0:
+            events.extend(new_events)
+        else:
+            break
+
     createdAts = [e['created_at'][:-1] for e in events]
 
     timestamps = []
