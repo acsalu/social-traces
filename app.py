@@ -6,6 +6,7 @@ import facebook
 import instagram
 import foursquare
 from github import GitHub
+import requests
 
 from keys import *
 
@@ -51,7 +52,6 @@ Login callbacks
 @app.route('/fb_login')
 def fb_login_callback():
     fb_access_token = request.args.get('access_token')
-    print(fb_access_token)
     resp = make_response(redirect('/'))
     resp.set_cookie('fb_access_token', fb_access_token)
 
@@ -100,11 +100,21 @@ def get_fb_data():
     posts = fb.get_object('me/posts')
 
     created_ats = [post['created_time'] for post in posts['data']]
+    next_ = posts['paging']['next']
+
+    counter = 1
+    while next_ != None and counter < 10:
+        posts = requests.get(next_).json()
+        created_ats.extend([post['created_time'] for post in posts['data']])
+        next_ = posts['paging']['next']
+        counter += 1
 
     timestamps = []
     for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%dT%H:%M:%S+0000")
         timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("FB: " + str(len(timestamps)))
 
     return json.dumps(timestamps)
 
@@ -123,6 +133,9 @@ def get_ig_data():
     for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%d %H:%M:%S")
         timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("IG: " + str(len(timestamps)))
+
     return json.dumps(timestamps)
 
 @app.route('/gh_data')
@@ -148,6 +161,9 @@ def get_gh_data():
     for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%dT%H:%M:%S")
         timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("GH: " + str(len(timestamps)))
+
     return json.dumps(timestamps)
 
 @app.route('/fsq_data')
@@ -163,6 +179,8 @@ def get_fsq_data():
     for (ca, offset) in zip(created_ats, offsets):
         ts = time.gmtime(ca + offset)
         timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("FSQ: " + str(len(timestamps)))
 
     return json.dumps(timestamps)
 
