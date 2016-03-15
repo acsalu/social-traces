@@ -1,5 +1,4 @@
 function requestTimestamps() {
-
   $.getJSON('/ig_data', function(data) {
     activities[Service.INSTAGRAM] = data;
     visualize();
@@ -48,12 +47,17 @@ function visualize() {
     .domain([0, 24 * 60])
     .range([0, width]);
 
+  var ticks = [];
+  for(var i = 0; i <= 2400; i += 120){
+    ticks.push(i);
+  }
   var xAxis = d3.svg.axis()
     .scale(x)
-    .orient("bottom");
+    .orient("bottom")
+    .tickValues(ticks)
+    .tickFormat(function(x){return d3.round(x/60)+":00"});
 
-  
-  var bins = {}
+  var bins = {};
 
   for (service in activities) {
     var minuteInDay = activities[service];
