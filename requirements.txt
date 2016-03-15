@@ -3,6 +3,6 @@ Flask
 gunicorn==19.4.5
 requests
 foursquare
-python-twitter
+facebook-sdk
 githubpy
 python-instagram
