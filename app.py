@@ -2,9 +2,11 @@ import os
 import time
 
 from flask import Flask, request, render_template, redirect, url_for, make_response, json
+import facebook
 import instagram
 import foursquare
 from github import GitHub
+import requests
 
 from keys import *
 
@@ -30,12 +32,12 @@ auth_uris = {
 def index():
     services_logged_in = {}
 
+    fb_access_token = request.cookies.get('fb_access_token')
     ig_access_token = request.cookies.get('ig_access_token')
     gh_access_token = request.cookies.get('gh_access_token')
     fsq_access_token = request.cookies.get('fsq_access_token')
 
-    print ig_access_token
-
+    services_logged_in['fb'] = fb_access_token != None
     services_logged_in['ig'] = ig_access_token != None
     services_logged_in['gh'] = gh_access_token != None
     services_logged_in['fsq'] = fsq_access_token != None
@@ -47,6 +49,15 @@ def index():
 """
 Login callbacks
 """
+@app.route('/fb_login')
+def fb_login_callback():
+    fb_access_token = request.args.get('access_token')
+    resp = make_response(redirect('/'))
+    resp.set_cookie('fb_access_token', fb_access_token)
+
+    return resp
+
+
 @app.route('/ig_login')
 def ig_login_callback():
     code = request.args.get('code')
@@ -81,6 +92,33 @@ def fsq_login_callback():
 """
 Data queries
 """
+@app.route('/fb_data')
+def get_fb_data():
+    fb_access_token = request.cookies.get('fb_access_token')
+    fb = facebook.GraphAPI(fb_access_token)
+
+    posts = fb.get_object('me/posts')
+
+    created_ats = [post['created_time'] for post in posts['data']]
+    next_ = posts['paging']['next']
+
+    counter = 1
+    while next_ != None and counter < 10:
+        posts = requests.get(next_).json()
+        created_ats.extend([post['created_time'] for post in posts['data']])
+        next_ = posts['paging']['next']
+        counter += 1
+
+    timestamps = []
+    for ca in created_ats:
+        ts = time.strptime(ca, "%Y-%m-%dT%H:%M:%S+0000")
+        timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("FB: " + str(len(timestamps)))
+
+    return json.dumps(timestamps)
+
+
 @app.route('/ig_data')
 def get_ig_data():
     ig_access_token = request.cookies.get('ig_access_token')
@@ -89,12 +127,15 @@ def get_ig_data():
 
     all_media, next_ = ig.user_recent_media()
 
-    createdAts = [str(m.created_time) for m in all_media]
+    created_ats = [str(m.created_time) for m in all_media]
 
     timestamps = []
-    for ca in createdAts:
+    for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%d %H:%M:%S")
         timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("IG: " + str(len(timestamps)))
+
     return json.dumps(timestamps)
 
 @app.route('/gh_data')
@@ -114,12 +155,15 @@ def get_gh_data():
         else:
             break
 
-    createdAts = [e['created_at'][:-1] for e in events]
+    created_ats = [e['created_at'][:-1] for e in events]
 
     timestamps = []
-    for ca in createdAts:
+    for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%dT%H:%M:%S")
         timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("GH: " + str(len(timestamps)))
+
     return json.dumps(timestamps)
 
 @app.route('/fsq_data')
@@ -128,12 +172,15 @@ def get_fsq_data():
     fsq_client.set_access_token(fsq_access_token)
 
     checkins = fsq_client.users.checkins(params={'limit': 300})
-    createdAts = [c['createdAt'] for c in checkins['checkins']['items']]
+    created_ats = [c['createdAt'] for c in checkins['checkins']['items']]
+    offsets = [c['timeZoneOffset'] * 60 for c in checkins['checkins']['items']]
 
     timestamps = []
-    for ca in createdAts:
-        ts = time.gmtime(ca)
+    for (ca, offset) in zip(created_ats, offsets):
+        ts = time.gmtime(ca + offset)
         timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+
+    print("FSQ: " + str(len(timestamps)))
 
     return json.dumps(timestamps)
 

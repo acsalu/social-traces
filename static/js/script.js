@@ -1,5 +1,10 @@
 function requestTimestamps() {
 
+  $.getJSON('/fb_data', function(data) {
+    activities[Service.FACEBOOK] = data;
+    visualize();
+  });
+
   $.getJSON('/ig_data', function(data) {
     activities[Service.INSTAGRAM] = data;
     visualize();
@@ -105,3 +110,12 @@ function visualize() {
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 }
+
+$(function() {
+  $('#fb-login-btn').click(function() {
+    FB.login(function(response){
+      console.log(response.authResponse.accessToken);
+      $.get( '/fb_login', {'access_token': response.authResponse.accessToken } );
+    }, {scope: 'user_posts,user_likes'});
+  });
+});
