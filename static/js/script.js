@@ -1,21 +1,26 @@
 function requestTimestamps() {
   $.getJSON('/fb_data', function(data) {
     activities[Service.FACEBOOK] = data;
+    $('.btn-facebook+p').html(data.length + " Posts").show();
     visualize();
   });
 
   $.getJSON('/ig_data', function(data) {
     activities[Service.INSTAGRAM] = data;
-    visualize();
-  });
-
-  $.getJSON('/fsq_data', function(data) {
-    activities[Service.FOURSQUARE] = data;
+    var stats = 
+    $('.btn-instagram+p').html(data.length + " Photos").show();
     visualize();
   });
 
   $.getJSON('/gh_data', function(data) {
     activities[Service.GITHUB] = data;
+    $('.btn-github+p').html(data.length + " Events").show();
+    visualize();
+  });
+
+  $.getJSON('/fsq_data', function(data) {
+    activities[Service.FOURSQUARE] = data;
+    $('.btn-foursquare+p').html(data.length + " Check-ins").show();
     visualize();
   });
 }
@@ -65,6 +70,7 @@ function visualize() {
   var bins = {};
 
   for (service in activities) {
+
     var minuteInDay = activities[service];
 
     var data = d3.layout.histogram()
@@ -119,7 +125,10 @@ $(function() {
   $('#fb-login-btn').click(function() {
     FB.login(function(response){
       console.log(response.authResponse.accessToken);
-      $.get( '/fb_login', {'access_token': response.authResponse.accessToken } );
+      $.get( '/fb_login', {'access_token': response.authResponse.accessToken } )
+      .done(function() {
+        window.location.replace('/');
+      });
     }, {scope: 'user_posts,user_likes'});
   });
 });
