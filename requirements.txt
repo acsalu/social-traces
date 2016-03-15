@@ -5,3 +5,4 @@ requests
 foursquare
 python-twitter
 githubpy
+python-instagram

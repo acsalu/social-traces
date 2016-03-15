@@ -1,20 +1,25 @@
 function requestTimestamps() {
 
+  $.getJSON('/ig_data', function(data) {
+    activities[Service.INSTAGRAM] = data;
+    visualize();
+  });
+
   $.getJSON('/fsq_data', function(data) {
-    activities[Service.FOURSQUARE] = data.map(timestampsToMinuteInDay);
+    activities[Service.FOURSQUARE] = data;
     visualize();
   });
 
   $.getJSON('/gh_data', function(data) {
-    activities[Service.GITHUB] = data.map(timestampsToMinuteInDay);
+    activities[Service.GITHUB] = data;
     visualize();
   });
 }
 
-var Service = Object.freeze({FACEBOOK: 0, TWITTER: 1, GITHUB: 2, FOURSQUARE: 3});
+var Service = Object.freeze({FACEBOOK: 0, INSTAGRAM: 1, GITHUB: 2, FOURSQUARE: 3});
 var className = {};
 className[Service.FACEBOOK] = 'fb';
-className[Service.TWITTER] = 'tw';
+className[Service.INSTAGRAM] = 'ig';
 className[Service.GITHUB] = 'gh';
 className[Service.FOURSQUARE] = 'fsq';
 
