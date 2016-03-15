@@ -119,7 +119,10 @@ $(function() {
   $('#fb-login-btn').click(function() {
     FB.login(function(response){
       console.log(response.authResponse.accessToken);
-      $.get( '/fb_login', {'access_token': response.authResponse.accessToken } );
+      $.get( '/fb_login', {'access_token': response.authResponse.accessToken } )
+      .done(function() {
+        window.location.replace('/');
+      });
     }, {scope: 'user_posts,user_likes'});
   });
 });
