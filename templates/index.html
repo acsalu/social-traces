@@ -28,13 +28,19 @@
 			  </a>
 			</div>
 			<div class="col-lg-3">
-				<a class="btn btn-block btn-social btn-twitter">
-			    <span class="fa fa-twitter"></span> Sign in with Twitter
+			  {% if not services_logged_in['ig'] %}
+				<a href="{{ auth_uris['ig'] }}" class="btn btn-block btn-social btn-instagram">
+			    <span class="fa fa-instagram"></span> Sign in with Instagram
 			  </a>
+			  {% else %}
+			  <a class="btn btn-block btn-social btn-instagram">
+			    <span class="fa fa-instagram"></span> Instagram Connected <span class="fa fa-check fa-pull-right"></span>
+			  </a>
+			  {% endif %}
 			</div>
 			<div class="col-lg-3">
-				{% if not services_logged_in['github'] %}
-				<a href="{{ auth_uris['github'] }}" class="btn btn-block btn-social btn-github">
+				{% if not services_logged_in['gh'] %}
+				<a href="{{ auth_uris['gh'] }}" class="btn btn-block btn-social btn-github">
 			    <span class="fa fa-github"></span> Sign in with Github
 			  </a>
 			  {% else %}
@@ -44,8 +50,8 @@
 			  {% endif %}
 			</div>
 			<div class="col-lg-3">
-				{% if not services_logged_in['foursquare'] %}
-					<a href="{{ auth_uris['foursquare'] }}" class="btn btn-block btn-social btn-foursquare">
+				{% if not services_logged_in['fsq'] %}
+					<a href="{{ auth_uris['fsq'] }}" class="btn btn-block btn-social btn-foursquare">
 					    <span class="fa fa-foursquare"></span> Sign in with Foursquare
 				  </a>
 				{% else %}
