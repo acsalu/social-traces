@@ -33,13 +33,9 @@
       testAPI();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
-      document.getElementById('status').innerHTML = 'Please log ' +
-        'into this app.';
     } else {
       // The person is not logged into Facebook, so we're not sure if
       // they are logged into this app or not.
-      document.getElementById('status').innerHTML = 'Please log ' +
-        'into Facebook.';
     }
   }
 
@@ -123,7 +119,7 @@
 			    <span class="fa fa-facebook"></span> Facebook Connected <span class="fa fa-check fa-pull-right"></span>
 			  </a>
 			  {% endif %}
-				
+			  <p>230 Posts</p>
 			</div>
 			<div class="col-lg-3">
 			  {% if not services_logged_in['ig'] %}
@@ -135,6 +131,7 @@
 			    <span class="fa fa-instagram"></span> Instagram Connected <span class="fa fa-check fa-pull-right"></span>
 			  </a>
 			  {% endif %}
+			  <p>230 Photos</p>
 			</div>
 			<div class="col-lg-3">
 				{% if not services_logged_in['gh'] %}
@@ -146,6 +143,7 @@
 			    <span class="fa fa-github"></span> Github Connected <span class="fa fa-check fa-pull-right"></span>
 			  </a>
 			  {% endif %}
+			  <p>230 Events</p>
 			</div>
 			<div class="col-lg-3">
 				{% if not services_logged_in['fsq'] %}
@@ -157,6 +155,7 @@
 					    <span class="fa fa-foursquare"></span> Foursquare Connected <span class="fa fa-check fa-pull-right"></span>
 				  </a>
 				{% endif %}
+				<p>230 Checkins</p>
 			</div>
 		</div> <!-- .row -->
 	</div> <!-- #social-login -->
@@ -164,7 +163,8 @@
 
 	<div class="container">
 		{% if should_show_traces %}
-		<svg id="traces"></svg>
+		<svg id="traces">
+		</svg>
 		<script type="text/javascript">
 			requestTimestamps();
 		</script>
