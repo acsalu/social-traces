@@ -1,10 +1,31 @@
 body {
-  font: 10px sans-serif;
+  font: 10px;
+  font-family: 'Roboto', sans-serif;
+}
 
+#cover > .row {
+  background-color: #FDD835;
+}
+
+#cover h1, h4 {
+  text-align: center;
+}
+
+#cover h4 {
+  font-weight: 300;
+}
+
+#cover h1 {
+  margin-top: 40px;
+  font-weight: 500;
+}
+
+#cover > .row > div {
+  height: 150px;
 }
 
 #social-login {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 #social-login>.row>div {

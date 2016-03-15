@@ -34,9 +34,9 @@ function timestampsToMinuteInDay(t) {
 
 function visualize() {
 
-  var margin = {top: 10, right: 20, bottom: 30, left: 20},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  var margin = {top: 20, right: 20, bottom: 30, left: 20},
+    width = 1000 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
 
   var svg = d3.select('#traces')
   .attr("width", width + margin.left + margin.right)
@@ -78,7 +78,6 @@ function visualize() {
 
     if (service in bins) {
       var data = bins[service];
-      console.log(data);
 
       var bar = svg.selectAll('.' + className[service])
           .data(data)
