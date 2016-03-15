@@ -52,8 +52,22 @@ Login callbacks
 @app.route('/fb_login')
 def fb_login_callback():
     fb_access_token = request.args.get('access_token')
+    print("Short lived token: " + fb_access_token)
+
+
+    fb_exchange_token_uri = FACEBOOK_TOKEN_EXCHANGE_URI % (
+        FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET, fb_access_token
+        )
+
+    print fb_exchange_token_uri
+
+    r = requests.get(fb_exchange_token_uri).text
+    print("response " + r)
+    long_lived_token = [parm for parm in r.split('&') if parm.startswith('access_token')][0][13:]
+    print("Long lived token: " + long_lived_token)
+
     resp = make_response(redirect('/'))
-    resp.set_cookie('fb_access_token', fb_access_token)
+    resp.set_cookie('fb_access_token', long_lived_token)
 
     return resp
 
@@ -95,6 +109,7 @@ Data queries
 @app.route('/fb_data')
 def get_fb_data():
     fb_access_token = request.cookies.get('fb_access_token')
+
     fb = facebook.GraphAPI(fb_access_token)
 
     posts = fb.get_object('me/posts')
@@ -102,8 +117,9 @@ def get_fb_data():
     created_ats = [post['created_time'] for post in posts['data']]
     next_ = posts['paging']['next']
 
+
     counter = 1
-    while next_ != None and counter < 10:
+    while next_ != None and counter < 20:
         posts = requests.get(next_).json()
         created_ats.extend([post['created_time'] for post in posts['data']])
         next_ = posts['paging']['next']
