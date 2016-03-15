@@ -6,4 +6,3 @@ foursquare
 facebook-sdk
 githubpy
 python-instagram
-requests
