@@ -1,7 +1,7 @@
 function requestTimestamps() {
   $.getJSON('/fb_data', function(data) {
     activities[Service.FACEBOOK] = data;
-    $('.btn-facebook+p').html(data.length + " Posts").show();
+    $('.btn-facebook+p').html(data.length + " Posts & Likes").show();
     visualize();
   });
 

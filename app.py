@@ -112,17 +112,30 @@ def get_fb_data():
 
     fb = facebook.GraphAPI(fb_access_token)
 
+    # Query user posts
     posts = fb.get_object('me/posts')
 
     created_ats = [post['created_time'] for post in posts['data']]
     next_ = posts['paging']['next']
 
-
     counter = 1
-    while next_ != None and counter < 20:
+    while next_ != None and counter < 25:
         posts = requests.get(next_).json()
         created_ats.extend([post['created_time'] for post in posts['data']])
         next_ = posts['paging']['next']
+        counter += 1
+
+    # Query user likes
+    likes = fb.get_object('me/likes')
+
+    created_ats.extend([like['created_time'] for like in likes['data']])
+    next_ = likes['paging']['next']
+
+    counter = 1
+    while next_ != None and counter < 20:
+        likes = requests.get(next_).json()
+        created_ats.extend([like['created_time'] for like in likes['data']])
+        next_ = likes['paging']['next']
         counter += 1
 
     timestamps = []
