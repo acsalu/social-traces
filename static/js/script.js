@@ -25,6 +25,10 @@ function requestTimestamps() {
   });
 }
 
+function clearCanvas() {
+  d3.selectAll('.bar').remove();
+}
+
 var Service = Object.freeze({FACEBOOK: 0, INSTAGRAM: 1, GITHUB: 2, FOURSQUARE: 3});
 var className = {};
 className[Service.FACEBOOK] = 'fb';
@@ -42,7 +46,7 @@ function timestampsToMinuteInDay(t) {
 }
 
 function visualize() {
-
+  clearCanvas();
   var margin = {top: 20, right: 20, bottom: 30, left: 20},
     width = 1000 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
