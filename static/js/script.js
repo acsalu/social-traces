@@ -1,7 +1,9 @@
 function requestTimestamps() {
+
   $.getJSON('/fb_data', function(data) {
     activities[Service.FACEBOOK] = data;
     $('.btn-facebook+p').html(data.length + " Posts & Likes").show();
+    showCheckMark($('.btn-facebook'));
     visualize();
   });
 
@@ -9,20 +11,35 @@ function requestTimestamps() {
     activities[Service.INSTAGRAM] = data;
     var stats = 
     $('.btn-instagram+p').html(data.length + " Photos").show();
+    showCheckMark($('.btn-instagram'));
     visualize();
   });
 
   $.getJSON('/gh_data', function(data) {
     activities[Service.GITHUB] = data;
     $('.btn-github+p').html(data.length + " Events").show();
+    showCheckMark($('.btn-github'));
     visualize();
   });
 
   $.getJSON('/fsq_data', function(data) {
     activities[Service.FOURSQUARE] = data;
     $('.btn-foursquare+p').html(data.length + " Check-ins").show();
+    showCheckMark($('.btn-foursquare'));
     visualize();
   });
+}
+
+function showCheckMark($btn) {
+  $btn.find('.progress-indicator')
+      .toggleClass("fa-circle-o-notch")
+      .toggleClass("fa-spin")
+      .toggleClass("fa-check")
+      .show();
+}
+
+function clearCanvas() {
+  d3.selectAll('.bar').remove();
 }
 
 var Service = Object.freeze({FACEBOOK: 0, INSTAGRAM: 1, GITHUB: 2, FOURSQUARE: 3});
@@ -42,7 +59,7 @@ function timestampsToMinuteInDay(t) {
 }
 
 function visualize() {
-
+  clearCanvas();
   var margin = {top: 20, right: 20, bottom: 30, left: 20},
     width = 1000 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
