@@ -44,7 +44,7 @@ def index():
 
     should_show_traces = reduce(lambda a, b: a or b, services_logged_in.values(), False)
 
-    return render_template('index.html', auth_uris=auth_uris, services_logged_in=services_logged_in, should_show_traces=should_show_traces)
+    return render_template('index.html', auth_uris=auth_uris, services_logged_in=services_logged_in, should_show_traces=should_show_traces, fb_app_id=FACEBOOK_CLIENT_ID)
 
 """
 Login callbacks
@@ -122,7 +122,7 @@ def get_fb_data():
     while next_ != None and counter < 25:
         posts = requests.get(next_).json()
         created_ats.extend([post['created_time'] for post in posts['data']])
-        next_ = posts['paging']['next']
+        next_ = posts['paging'].get('next',None) if 'paging' in posts else None
         counter += 1
 
     # Query user likes
@@ -135,7 +135,7 @@ def get_fb_data():
     while next_ != None and counter < 20:
         likes = requests.get(next_).json()
         created_ats.extend([like['created_time'] for like in likes['data']])
-        next_ = likes['paging']['next']
+        next_ = likes['paging'].get('next',None) if 'paging' in likes else None
         counter += 1
 
     timestamps = []
