@@ -65,8 +65,9 @@ body {
   fill: #F94877;
 }
 
-.fa-check {
+.progress-indicator {
   padding-top: 3px;
+  text-align: center;
 }
 
 .container {
