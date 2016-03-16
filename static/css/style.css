@@ -70,8 +70,9 @@ body {
   text-align: center;
 }
 
-.container {
+#traces_container {
   overflow-x: scroll;
+  margin-bottom: 20px;
 }
 #traces {
   margin: 0 auto;
