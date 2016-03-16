@@ -68,3 +68,7 @@ body {
 .fa-check {
   padding-top: 3px;
 }
+
+.container {
+  overflow-x: scroll;
+}
