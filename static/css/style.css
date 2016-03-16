@@ -73,3 +73,7 @@ body {
 .container {
   overflow-x: scroll;
 }
+#traces {
+  margin: 0 auto;
+  display: block;
+}
