@@ -141,7 +141,7 @@ def get_fb_data():
     timestamps = []
     for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%dT%H:%M:%S+0000")
-        timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+        timestamps.append((ts.tm_hour * 60 + ts.tm_min -300)%1440)
 
     print("FB: " + str(len(timestamps)))
 
@@ -161,7 +161,7 @@ def get_ig_data():
     timestamps = []
     for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%d %H:%M:%S")
-        timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+        timestamps.append((ts.tm_hour * 60 + ts.tm_min -300)%1440)
 
     print("IG: " + str(len(timestamps)))
 
@@ -189,7 +189,7 @@ def get_gh_data():
     timestamps = []
     for ca in created_ats:
         ts = time.strptime(ca, "%Y-%m-%dT%H:%M:%S")
-        timestamps.append(ts.tm_hour * 60 + ts.tm_min)
+        timestamps.append((ts.tm_hour * 60 + ts.tm_min -300)%1440)
 
     print("GH: " + str(len(timestamps)))
 
