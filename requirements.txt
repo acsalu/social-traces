@@ -2,7 +2,5 @@ werkzeug==0.8.3
 Flask
 gunicorn==19.4.5
 requests
-foursquare
 facebook-sdk
 githubpy
-python-instagram
