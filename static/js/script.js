@@ -75,14 +75,27 @@ function visualize() {
     .range([0, width]);
 
   var ticks = [];
-  for(var i = 0; i <= 2400; i += 120){
+  for(var i = 0; i <= 1440; i += 120){
     ticks.push(i);
+  }
+  var timeFormat = function(x){
+    var hour = d3.round(x/60);
+    if(hour%24 === 0){
+      return "12am"
+    } else if (hour === 12){
+      return "12pm"
+    } else if (hour < 12){
+      return hour + "am"
+    } else {
+      return hour%12 + "pm"
+    }
+    return +":00"
   }
   var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
     .tickValues(ticks)
-    .tickFormat(function(x){return d3.round(x/60)+":00"});
+    .tickFormat(timeFormat);
 
   var bins = {};
 
